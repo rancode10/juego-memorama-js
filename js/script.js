@@ -13,7 +13,8 @@ class Memorama {
         this.$contenedorGeneral = document.querySelector('.contenedor-general');
         this.$contenedorTarjetas = document.querySelector('.contenedor-tarjetas');
         this.$pantallaBloqueada = document.querySelector('.pantalla-bloqueada')
-        this.$mensaje = document.querySelector('h2.mensaje');        
+        this.$mensaje = document.querySelector('h2.mensaje');     
+        this.$errorContenedor = document.createElement('div') ;  
 
         //Llamado a los eventos
         this.eventos();
@@ -47,7 +48,8 @@ class Memorama {
         });
 
         this.$contenedorTarjetas.innerHTML = html; 
-        this.comienzaJuego();       
+        this.comienzaJuego();  
+        this.contenedorError();     
     }
 
     comienzaJuego() {
@@ -80,6 +82,7 @@ class Memorama {
         arrtarjetasAceptadas.forEach(tarjeta => {
             tarjeta.classList.add('acertada');
             this.imagenesCorrectas.push(tarjeta);
+            this.victoriaJuego();
         });
     }
 
@@ -99,10 +102,45 @@ class Memorama {
             } else {
                 this.reversoTarjetas(this.agregadorTarjetas);
                 this.errores++;
+                this.incrementadorError();
+                this.derrotaJuego();
             }
             this.verificadorTarjetas.splice(0); //liberador de arreglo, usando splice
             this.agregadorTarjetas.splice(0); // liberador de arreglo, usando splice
         }
+    }
+
+    victoriaJuego() {
+        if(this.imagenesCorrectas.length === this.numeroTarjetas) {
+            setTimeout(() => {
+                this.$pantallaBloqueada.style.display = 'block';
+                this.$mensaje.innerText = '¡Felicidades! has ganado el juego'
+            }, 1000);
+            setTimeout(() => {
+                location.reload();
+            }, 4000);
+        }
+    }
+
+    derrotaJuego() {
+        if(this.errores === 5) {
+            setTimeout(() => {
+               this.$pantallaBloqueada.style.display = 'block';                
+            }, 0);
+            setTimeout(() => {
+                location.reload();   
+            }, 4000);
+        }
+    }
+
+    incrementadorError() {
+        this.$errorContenedor.innerText = `Errores: ${this.errores}`
+    }
+
+    contenedorError() {
+        this.$errorContenedor.classList.add('error');
+        this.incrementadorError();
+        this.$contenedorGeneral.appendChild(this.$errorContenedor);
     }
 }
 
