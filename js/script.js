@@ -26,7 +26,9 @@ class Memorama {
         window.addEventListener('DOMContentLoaded', () => {
             this.seleccionDificultad();
             this.cargaPantalla();
-
+            window.addEventListener('contextmenu', e => {
+                e.preventDefault();
+            }, false);
         });
     }
 
